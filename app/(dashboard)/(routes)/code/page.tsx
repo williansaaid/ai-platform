@@ -2,7 +2,7 @@
 import * as z from "zod";
 import axios from "axios";
 import Heading from "@/components/Heading";
-import { MessageSquare } from "lucide-react";
+import { Code } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { formSchema } from "./constants";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,8 +17,9 @@ import { Loader } from "@/components/Loader";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "@/components/UserAvatar";
 import { BotAvatar } from "@/components/BotAvatar";
+import ReactMarkdown from "react-markdown";
 
-const Conversation = () => {
+const CodePage = () => {
     const router = useRouter();
     const [messages, setMessages] = useState<ChatCompletionMessage[]>([]);
 
@@ -41,7 +42,7 @@ const Conversation = () => {
 
             const newMessages = [...messages, userMessage];
 
-            const response = await axios.post("/api/conversation", {
+            const response = await axios.post("/api/code", {
                 messages: newMessages,
             });
 
@@ -59,11 +60,11 @@ const Conversation = () => {
     return (
         <div>
             <Heading
-                title="Conversation"
-                description="ChatGPT based conversational model."
-                icon={MessageSquare}
-                iconColor="text-violet"
-                bgColor="bg-violet/10"
+                title="Code Generation"
+                description="Generate code using descriptive text."
+                icon={Code}
+                iconColor="text-green"
+                bgColor="bg-green/10"
             />
             <div className="px-4 lg:px-8 py-4">
                 <div>
@@ -82,7 +83,7 @@ const Conversation = () => {
                                             <Input
                                                 className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent pl-4"
                                                 disabled={isLoading}
-                                                placeholder="How do I calculate the weight of a cilinder in Mars?"
+                                                placeholder="How can I make a reusable button in React?"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -90,7 +91,7 @@ const Conversation = () => {
                                 )}
                             />
                             <Button
-                                className="col-span-12 lg:col-span-2 w-full bg-violet/80 hover:bg-violet"
+                                className="col-span-12 lg:col-span-2 w-full bg-green/80 hover:bg-green"
                                 disabled={isLoading}
                             >
                                 Generate
@@ -100,7 +101,7 @@ const Conversation = () => {
                 </div>
                 <div className="space-y-4 mt-4">
                     {isLoading && (
-                        <div className="p-8 rounded-lg w-full flex items-center justify-center bg-violet/10">
+                        <div className="p-8 rounded-lg w-full flex items-center justify-center bg-green/10">
                             <Loader/>
                         </div>
                     )}
@@ -115,13 +116,25 @@ const Conversation = () => {
                                 key={message.content}
                                 className={cn(
                                     "p-8 w-full flex items-start justify-start gap-x-8 rounded-lg",
-                                    message.role === "user" ? "bg-white border border-violet/20" : "bg-violet/10"
+                                    message.role === "user" ? "bg-white border border-green/20" : "bg-green/10"
                                 )}
                             >
                                 {message.role === "user" ? <UserAvatar/> : <BotAvatar/>}
-                                <p className="text-sm">
-                                    {message.content}
-                                </p>
+                                <ReactMarkdown
+                                    components={{
+                                        pre: ({ node, ...props }) => (
+                                            <div className="overflow-auto w-full my-2 bg-green/10 p-2 rounded-lg">
+                                                <pre {...props} />
+                                            </div>
+                                        ),
+                                        code: ({ node, ...props }) => (
+                                            <code className="bg-green/10 rounded-lg p-1" {...props}/>
+                                        )
+                                    }}
+                                    className="text-sm oveflow-hidden leading-7"
+                                >
+                                    {message.content || ""}
+                                </ReactMarkdown>
                             </div>
                         ))}
                     </div>
@@ -131,4 +144,4 @@ const Conversation = () => {
     );
 }
 
-export default Conversation;
+export default CodePage;

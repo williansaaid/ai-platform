@@ -37,7 +37,7 @@ const tools = [
         bgColor: "bg-green/10",
         href: "/code"
     },
-]
+];
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -48,7 +48,7 @@ export default function DashboardPage() {
                     Explore the power of AI!
                 </h2>
                 <p className="text-muted-foreground font-light text-sm md:text-lg text-center">
-                    ChatGPT 3.5 - Valid, quickly and trustfully responses
+                    Our AI model - Valid, quickly and trustfully responses
                 </p>
             </div>
             <div className="px-4 md:px-20 lg:px-32 space-y-4">
